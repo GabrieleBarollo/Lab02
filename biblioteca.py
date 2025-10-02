@@ -1,21 +1,99 @@
+from  operator import itemgetter
 def carica_da_file(file_path):
     """Carica i libri dal file"""
     # TODO
+    try:
+        input_file = open(file_path, "r")
+        tab = []
+        for line in input_file:
+            l1 = []
+            data_list = line.split(",")
+            for data in data_list:
+                data = data.rstrip()
+                l1.append(data)
+            tab.append(l1)
+
+        input_file.close()
+        return tab
+    except FileNotFoundError:
+        return None
+
 
 
 def aggiungi_libro(biblioteca, titolo, autore, anno, pagine, sezione, file_path):
     """Aggiunge un libro nella biblioteca"""
     # TODO
+    try:
+        file = open(file_path, "a")
+        check = True
+        n = 0
+        while check and n < len(biblioteca):
+            if titolo == biblioteca[n][0]:
+                check = False
+            else:
+                n = n+1
+
+        if check:
+            l2 = []
+            l2.append(titolo)
+            l2.append(autore)
+            l2.append(anno)
+            l2.append(pagine)
+            l2.append(sezione)
+            biblioteca.append(l2)
+            for i in range(len(l2)):
+                if i == (len(l2)-1):
+                    file.write(str(l2[i]))
+                else:
+                    parola = str(l2[i]) + ","
+                    file.write(parola)
+
+        else:
+            print("Il libro è già inserito all'interno della biblioteca")
+
+        file.close()
+
+        return check
+    except Exception:
+        return None
+
 
 
 def cerca_libro(biblioteca, titolo):
     """Cerca un libro nella biblioteca dato il titolo"""
     # TODO
+    try:
+        control = False
+        for line in biblioteca:
+            if titolo == line[0]:
+                result = line[0] + "," + " " + line[1] + "," + " " + line[2] + "," + " " + line[3] + "," + " " + line[4]
+                control = True
+        if not control:
+            result = None
+
+        return result
+
+    except Exception:
+        return None
 
 
 def elenco_libri_sezione_per_titolo(biblioteca, sezione):
     """Ordina i titoli di una data sezione della biblioteca in ordine alfabetico"""
     # TODO
+    try:
+        data_tab_provv = []
+        for dataline in biblioteca:
+            if str(sezione) in dataline:
+                data_tab_provv.append(dataline)
+
+        tab_ord = sorted(data_tab_provv, key = itemgetter(0))
+        list_titles = []
+        for line in tab_ord:
+            list_titles.append(line[0])
+        return list_titles
+
+    except Exception:
+        return None
 
 
 def main():
@@ -37,6 +115,7 @@ def main():
                 file_path = input("Inserisci il path del file da caricare: ").strip()
                 biblioteca = carica_da_file(file_path)
                 if biblioteca is not None:
+                    print("Il tuo file è stato scaricato correttamente")
                     break
 
         elif scelta == "2":
